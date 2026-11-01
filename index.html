@@ -250,9 +250,7 @@
     // Version 2 what-if simulator: independently designed teaching model, NOT FICO's scoring code.
     (function initDecisionLab(){
       const cardList=$('labCardList'), collectionList=$('labCollectionList');
-      const money=n=>'
-</body>
-</html>+Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
+      const money=n=>String.fromCharCode(36)+Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
       const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
       const cardData=[
         {name:'Card A',balance:3000,limit:5000,pay:2000},
