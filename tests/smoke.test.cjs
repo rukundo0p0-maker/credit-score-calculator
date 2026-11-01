@@ -23,6 +23,7 @@ test('Restored Version 1 calculator parses with original calculation logic', () 
   assert.match(html,/id="addProfileLoan"/);
   assert.match(html,/id="profileLoanList"/);
   assert.match(html,/id="cardPayoffPlan"/);
+  assert.match(html,/<script defer src="analytics.js"><\/script>/);
   assert.match(html,/<meta property="og:site_name" content="Credit Score Hub"/);
   const ld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   assert.ok(ld, 'Site name JSON-LD present');
@@ -39,6 +40,19 @@ test('Separate scenario page parses and has operational controls', () => {
   }
   assert.match(html,/function snapshot\(after\)/);
   assert.match(html,/function loanSummary\(after\)/);
+  assert.match(html,/<script defer src="analytics.js"><\/script>/);
   assert.match(html,/<meta property="og:site_name" content="Credit Score Hub"/);
   assert.match(html,/function bindRows\(elementId, array\)/);
+});
+
+test('Analytics initializer only injects GA4 after consent and privacy page is available', () => {
+  const js = fs.readFileSync('analytics.js','utf8');
+  new vm.Script(js, {filename:'analytics.js'});
+  assert.match(js, /G-3SHJEG2YQ7/);
+  assert.match(js, /csh-analytics-banner/);
+  assert.match(js, /credit-score-hub-analytics-consent-v1/);
+  assert.match(js, /beginAnalytics\(\)/);
+  const policy = inspect('privacy.html');
+  assert.match(policy, /Change analytics preference/);
+  assert.match(policy, /<script defer src="analytics.js"><\/script>/);
 });
