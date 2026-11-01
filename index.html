@@ -28,6 +28,21 @@
     @media(max-width:930px){.hero{gap:30px}.workspace{grid-template-columns:1fr}.results-card{position:static}.five-grid{grid-template-columns:repeat(3,1fr)}.preview-card{max-width:360px}.float-bubble{left:-2px}.hero h1{font-size:48px}.faq-layout{gap:30px}}
     @media(max-width:650px){.shell{padding:0 18px}.site-nav{height:70px}.nav-links{gap:16px}.nav-links a{font-size:11px}.nav-links a:last-child{display:none}.brand{font-size:14px}.hero{display:flex;flex-direction:column;align-items:stretch;padding:42px 0 38px;gap:26px}.hero h1{font-size:44px}.lead{font-size:15px}.hero-visual{min-height:245px}.preview-card{max-width:94%;padding:23px}.float-bubble{left:4px;bottom:4px}.estimator-wrap{padding:42px 0 50px}.form-card,.results-card{padding:23px 19px}.fields{gap:12px}.field input,.field select{font-size:12px}.section-title{font-size:28px}.education{padding:52px 0}.five-grid{grid-template-columns:1fr 1fr;gap:10px}.edu-card{min-height:185px;padding:17px}.faq{padding:0 0 52px}.faq-layout{grid-template-columns:1fr;gap:15px}.footer-bottom{display:block}.footer-bottom span{display:block;margin-bottom:5px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
+    /* Optional credit types; original scoring functions remain unchanged. */
+    .fields.card-triplet{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .loan-add{background:#e7f5ed;color:#176e5d;border:1px solid #b5dccb;padding:9px 13px;border-radius:9px;font-size:12px;font-weight:770}
+    .loan-mini-summary,.loan-result-summary{font-size:12px;color:#52736a;background:#f0f7f3;border:1px solid #d8e9de;border-radius:10px;padding:12px;margin-top:12px;line-height:1.7}
+    .loan-result-summary{margin-top:17px}
+    .loan-entry{background:#f9fcfa;border:1px solid #dce8e1;border-radius:11px;margin-top:12px;padding:13px}
+    .loan-entry-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;font-size:12px;font-weight:800;color:#3b5854}
+    .loan-entry-head button{border:0;background:transparent;text-decoration:underline;color:#a35047;font-size:12px}
+    .loan-entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .loan-entry-grid label{min-width:0;display:flex;flex-direction:column;font-size:11px;font-weight:750;color:#52716d;gap:6px}
+    .loan-entry-grid label:nth-child(1),.loan-entry-grid label:last-child{grid-column:1/-1}
+    .loan-entry-grid select,.loan-entry-grid input{width:100%;min-width:0;min-height:41px;border:1px solid #d5e2db;border-radius:8px;padding:8px 10px;background:white;color:#263f3f;font-size:13px}
+    .loan-entry-grid select:focus,.loan-entry-grid input:focus{outline:2px solid #b4ddca}
+    @media(max-width:650px){.fields.card-triplet{grid-template-columns:1fr}.loan-entry-grid{grid-template-columns:1fr}.loan-entry-grid label:nth-child(1),.loan-entry-grid label:last-child{grid-column:auto}}
   </style>
 </head>
 <body>
@@ -44,7 +59,7 @@
             <div class="fields"><div class="field"><label for="late30">30-day late payments</label><select id="late30" required><option value="" selected>Select a number</option><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3 or more</option></select></div><div class="field"><label for="late60">60-day late payments</label><select id="late60" required><option value="" selected>Select a number</option><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3 or more</option></select></div><div class="field"><label for="late90">90+ day late payments</label><select id="late90" required><option value="" selected>Select a number</option><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3 or more</option></select></div><div class="field"><label for="collections">Collection accounts</label><select id="collections" required><option value="" selected>Select a number</option><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3 or more</option></select></div></div><label class="check-pill check-danger" style="width:fit-content"><input type="checkbox" id="bankruptcy"/> Bankruptcy on my credit report</label><p class="hint">Include events still on your reports. Actual scoring also depends on severity, recency, and other details not captured here.</p>
           </section>
           <section class="factor" aria-labelledby="amounts-title"><div class="factor-heading"><span class="factor-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h5"/></svg></span><div><h4 class="factor-title" id="amounts-title">Credit utilization</h4><div class="factor-sub">How much revolving credit you're using</div></div><span class="weight">30%</span></div>
-            <div class="fields"><div class="field"><label for="cardBalance">Total card balances ($)</label><input id="cardBalance" inputmode="decimal" type="number" min="0" max="100000000" step="0.01" placeholder="e.g. 1500" required/></div><div class="field"><label for="cardLimit">Total card limits ($)</label><input id="cardLimit" inputmode="decimal" type="number" min="0" max="100000000" step="0.01" placeholder="e.g. 10000" required/></div></div><p class="hint">Use reported credit card / revolving balances and limits across your cards, not mortgage or installment-loan balances. Enter 0 for both if you don't have revolving credit.</p>
+            <div class="fields card-triplet"><div class="field"><label for="cardLimit">Total credit limit ($)</label><input id="cardLimit" inputmode="decimal" type="number" min="0" max="100000000" step="0.01" placeholder="e.g. 10000" required/></div><div class="field"><label for="cardBalance">Current card balance ($)</label><input id="cardBalance" inputmode="decimal" type="number" min="0" max="100000000" step="0.01" placeholder="e.g. 1500" required/></div><div class="field"><label for="cardPayoffPlan">Planned payoff ($) <span class="optional">(optional)</span></label><input id="cardPayoffPlan" inputmode="decimal" type="number" min="0" max="100000000" step="0.01" placeholder="e.g. 500"/></div></div><p class="hint">Use reported credit card / revolving balances and limits across your cards, not mortgage or installment-loan balances. Enter 0 for both if you don't have revolving credit.</p>
           </section>
           <section class="factor" aria-labelledby="age-title"><div class="factor-heading"><span class="factor-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><h4 class="factor-title" id="age-title">Length of credit history</h4><div class="factor-sub">How long your accounts have existed</div></div><span class="weight">15%</span></div>
             <div class="fields"><div class="field"><label for="oldestAge">Oldest account age (years)</label><input id="oldestAge" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="e.g. 8" required/></div><div class="field"><label for="avgAge">Average account age <span class="optional">(optional)</span></label><input id="avgAge" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="e.g. 4.5" /></div><div class="field full"><label for="recentlyReported">Has an account been reported within the last 6 months?</label><select id="recentlyReported" required><option value="" selected>Choose an answer</option><option value="yes">Yes</option><option value="no">No</option><option value="unsure">Not sure</option></select></div></div><p class="hint">A typical FICO score requires an account at least 6 months old and one reported in the past 6 months. If average age is blank, we use a rough assumption.</p>
@@ -53,13 +68,22 @@
             <div class="fields"><div class="field"><label for="hardInquiries">Hard inquiries (past 12 months)</label><select id="hardInquiries" required><option value="" selected>Select a number</option><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 or more</option></select></div><div class="field"><label for="newAccounts">New accounts (past 12 months)</label><select id="newAccounts" required><option value="" selected>Select a number</option><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3 or more</option></select></div></div><p class="hint">Rate-shopping inquiries for some loan types may be grouped in real FICO models; this calculator cannot account for that.</p>
           </section>
           <section class="factor" aria-labelledby="mix-title"><div class="factor-heading"><span class="factor-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><div><h4 class="factor-title" id="mix-title">Credit mix</h4><div class="factor-sub">Types of accounts on your credit reports</div></div><span class="weight">10%</span></div><span class="field-legend">Select all account types you have</span><div class="checkbox-row"><label class="check-pill"><input id="mixCards" type="checkbox"/> Credit / retail cards</label><label class="check-pill"><input id="mixLoans" type="checkbox"/> Installment loans</label><label class="check-pill"><input id="mixMortgage" type="checkbox"/> Mortgage</label></div><p class="hint">Having different types can help, but you don't need all three—and shouldn't borrow just to improve your mix.</p></section>
+
+          <section class="factor" aria-labelledby="loan-profile-heading">
+            <div class="factor-heading"><span class="factor-icon" aria-hidden="true">🏦</span><div><h4 class="factor-title" id="loan-profile-heading">Other loans &amp; borrowing <span class="optional">(optional)</span></h4><div class="factor-sub">Auto loans, mortgages, student loans, personal loans, HELOCs, and more</div></div></div>
+            <p class="hint" style="margin-bottom:13px">Add loans that appear on your credit reports. These amounts are <strong>not</strong> included in credit-card utilization. This optional section supplements the original estimate; it does not claim to reproduce a FICO loan-balance formula.</p>
+            <button type="button" class="loan-add" id="addProfileLoan">+ Add a loan or credit line</button>
+            <div id="profileLoanList" aria-live="polite"></div>
+            <div id="profileLoanSummary" class="loan-mini-summary" role="status">No other loans entered.</div>
+            <p class="hint">For installment loans, enter the <strong>original borrowed amount</strong> and <strong>current remaining principal</strong>. For a HELOC, enter the credit line's limit and drawn balance. BNPL may not appear on credit reports.</p>
+          </section>
           <div class="form-footer"><div id="errorMessage" class="error hidden" role="alert"></div><button class="button" type="submit">Calculate my illustrative score <span aria-hidden="true">→</span></button><p class="assurance">🔒 Everything is calculated locally in this browser.</p></div>
         </form>
       </div>
       <aside class="results-card" aria-labelledby="resultsTitle"><h3 id="resultsTitle">Your credit snapshot</h3><p class="subtitle">A directional, educational illustration</p>
         <div class="empty-result" id="emptyResult"><span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18a9 9 0 1 1 16 0"/><path d="M12 13l4-5"/><circle cx="12" cy="13" r="1.3" fill="currentColor"/></svg></span><strong>Ready when you are.</strong><p>Fill out the five categories to see an illustrative score and suggestions.</p><button class="button button-soft" type="button" id="exampleBtn">Try an example profile</button></div>
         <div id="notEligibleResult" class="empty-result not-eligible hidden" role="status"><span class="empty-icon" aria-hidden="true">ⓘ</span><strong>No numeric estimate available</strong><p id="notEligibleReason"></p></div>
-        <div id="scoreResult" class="hidden" aria-live="polite" aria-atomic="true"><div class="score-stage"><svg class="gauge" viewBox="0 0 220 125" role="img" aria-label="Illustrative score gauge"><path class="track" d="M 20 109 A 90 90 0 0 1 200 109" pathLength="100"/><path class="value" id="gaugeValue" d="M 20 109 A 90 90 0 0 1 200 109" pathLength="100"/></svg><div class="score-val" id="scoreValue">—</div><div class="score-grade" id="scoreGrade">—</div><p class="score-description">Illustrative result, not an official FICO® Score or a reliable prediction of one.</p></div><div class="result-facts"><span>Scale: <strong>300–850</strong></span><span>Model: <strong>Educational</strong></span></div><div class="breakdown"><h4>Your factor breakdown</h4><small>Higher bars represent stronger inputs in this simplified model.</small><div id="factorBreakdown"></div></div><div class="insight"><h4 id="insightTitle">What could help?</h4><p id="insightText"></p></div><div id="whatIf" class="insight hidden" style="background:#eff4fd"><h4 style="color:#365889">Explore a hypothetical change</h4><p id="whatIfText" style="color:#52698d"></p></div><div class="result-buttons"><button type="button" class="button button-soft" id="copyBtn">Copy summary</button><button type="button" class="button button-soft" id="editBtn">Edit my inputs</button></div><p class="legal-note">This independent model uses published category weights with our own simplified assumptions. The resulting number is not validated against real credit bureau data; no accuracy or point tolerance is promised. Do not use it to make lending decisions.</p></div>
+        <div id="scoreResult" class="hidden" aria-live="polite" aria-atomic="true"><div class="score-stage"><svg class="gauge" viewBox="0 0 220 125" role="img" aria-label="Illustrative score gauge"><path class="track" d="M 20 109 A 90 90 0 0 1 200 109" pathLength="100"/><path class="value" id="gaugeValue" d="M 20 109 A 90 90 0 0 1 200 109" pathLength="100"/></svg><div class="score-val" id="scoreValue">—</div><div class="score-grade" id="scoreGrade">—</div><p class="score-description">Illustrative result, not an official FICO® Score or a reliable prediction of one.</p></div><div class="result-facts"><span>Scale: <strong>300–850</strong></span><span>Model: <strong>Educational</strong></span></div><div class="breakdown"><h4>Your factor breakdown</h4><small>Higher bars represent stronger inputs in this simplified model.</small><div id="factorBreakdown"></div></div><div class="insight"><h4 id="insightTitle">What could help?</h4><p id="insightText"></p></div><div id="whatIf" class="insight hidden" style="background:#eff4fd"><h4 style="color:#365889">Explore a hypothetical change</h4><p id="whatIfText" style="color:#52698d"></p></div><div id="loanResultSummary" class="loan-result-summary hidden" role="status"></div><div class="result-buttons"><button type="button" class="button button-soft" id="copyBtn">Copy summary</button><button type="button" class="button button-soft" id="editBtn">Edit my inputs</button></div><p class="legal-note">This independent model uses published category weights with our own simplified assumptions. The resulting number is not validated against real credit bureau data; no accuracy or point tolerance is promised. Do not use it to make lending decisions.</p></div>
       </aside></div>
     </div></section>
     <section class="education shell" id="learn"><span class="section-kicker">The science behind the score</span><h2 class="section-title">Five factors. One clearer picture.</h2><p class="section-intro">FICO publicly describes these broad categories and typical relative weights. The actual impact of each detail varies by individual and by scoring version.</p><div class="five-grid"><article class="edu-card"><div class="edu-icon">01</div><div class="edu-title">Payment history</div><div class="edu-weight">35% of typical scoring factors</div><p class="edu-desc">Your track record of on-time payments, plus any reported late payments or serious delinquencies.</p></article><article class="edu-card"><div class="edu-icon">02</div><div class="edu-title">Amounts owed</div><div class="edu-weight">30% of typical scoring factors</div><p class="edu-desc">Balances and debt relative to limits. Card utilization is especially useful to understand.</p></article><article class="edu-card"><div class="edu-icon">03</div><div class="edu-title">Length of history</div><div class="edu-weight">15% of typical scoring factors</div><p class="edu-desc">Age of your oldest and newest accounts, average history, and the time since you used credit.</p></article><article class="edu-card"><div class="edu-icon">04</div><div class="edu-title">New credit</div><div class="edu-weight">10% of typical scoring factors</div><p class="edu-desc">How often you have applied for or opened credit recently.</p></article><article class="edu-card"><div class="edu-icon">05</div><div class="edu-title">Credit mix</div><div class="edu-weight">10% of typical scoring factors</div><p class="edu-desc">The variety of credit types you manage. You do not need every possible type.</p></article></div></section>
@@ -131,5 +155,116 @@
     function fillExample(){const example={late30:'0',late60:'0',late90:'0',collections:'0',cardBalance:'1500',cardLimit:'10000',oldestAge:'8',avgAge:'4.5',recentlyReported:'yes',hardInquiries:'1',newAccounts:'0'};Object.entries(example).forEach(([id,value])=>$(id).value=value);$('bankruptcy').checked=false;$('mixCards').checked=true;$('mixLoans').checked=true;$('mixMortgage').checked=false;form.requestSubmit()}
     form.addEventListener('submit',onSubmit);$('exampleBtn').addEventListener('click',fillExample);$('resetBtn').addEventListener('click',()=>{form.reset();clearResult()});$('editBtn').addEventListener('click',()=>{$('calculatorForm').scrollIntoView({behavior:'smooth',block:'start'});$('oldestAge').focus({preventScroll:true})});$('copyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(window.lastSummary||'');$('copyBtn').textContent='Copied!';setTimeout(()=>$('copyBtn').textContent='Copy summary',2000)}catch(e){$('copyBtn').textContent='Copy unavailable';setTimeout(()=>$('copyBtn').textContent='Copy summary',2200)}});$('copyrightYear').textContent=new Date().getFullYear();
   </script>
+<script>
+  // Optional loan information — deliberately separate from the original V1 scoring algorithm.
+  (function initLoanProfile(){
+    'use strict';
+    const byId=id=>document.getElementById(id);
+    const rows=[];
+    const TYPES=[
+      ['auto','Auto / car loan','installment'],['auto-lease','Auto lease','installment'],
+      ['mortgage','Home mortgage','mortgage'],['student-federal','Federal student loan','installment'],
+      ['student-private','Private student loan','installment'],['personal','Personal loan','installment'],
+      ['home-equity','Home equity installment loan','installment'],['credit-builder','Credit-builder loan','installment'],
+      ['retail-loan','Retail / furniture installment loan','installment'],['other-installment','Other installment loan','installment'],
+      ['heloc','Home equity line of credit (HELOC)','revolving'],['bnpl','Buy now, pay later (BNPL)','uncertain']
+    ];
+    let automaticallyChecked={mixLoans:false,mixMortgage:false};
+    const fmt=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
+    const labelFor=type=>TYPES.find(t=>t[0]===type);
+    function options(current){return TYPES.map(t=>'<option value="'+t[0]+'"'+(t[0]===current?' selected':'')+'>'+t[1]+'</option>').join('')}
+    function render(){
+      byId('profileLoanList').innerHTML=rows.map((r,i)=>'<div class="loan-entry" data-row="'+i+'"><div class="loan-entry-head"><span>Loan / credit account '+(i+1)+'</span><button type="button" data-remove-loan="1">Remove</button></div><div class="loan-entry-grid">'
+       +'<label>Type of account<select data-field="type">'+options(r.type)+'</select></label>'
+       +'<label>Original loan amount / line limit ($)<input data-field="original" type="number" min="0.01" max="100000000" step="0.01" value="'+r.original+'"></label>'
+       +'<label>Current outstanding balance ($)<input data-field="balance" type="number" min="0" max="100000000" step="0.01" value="'+r.balance+'"></label>'
+       +'<label>Appears on your credit report?<select data-field="reported"><option value="yes"'+(r.reported==='yes'?' selected':'')+'>Yes</option><option value="unsure"'+(r.reported==='unsure'?' selected':'')+'>Not sure</option><option value="no"'+(r.reported==='no'?' selected':'')+'>No</option></select></label>'
+       +'</div></div>').join('');
+    }
+    function validRows(){
+      for(const r of rows){
+        if(!Number.isFinite(r.original)||r.original<=0||r.original>100000000||!Number.isFinite(r.balance)||r.balance<0||r.balance>100000000)return 'Enter a positive original loan amount or credit limit and a valid current balance for each loan.';
+      }
+      const payoff=byId('cardPayoffPlan');
+      const amt=payoff.value.trim()===''?0:Number(payoff.value);
+      const cardBalance=Number(byId('cardBalance').value);
+      if(!Number.isFinite(amt)||amt<0||amt>100000000|| (Number.isFinite(cardBalance)&&payoff.value.trim()!==''&&amt>cardBalance))return 'Your planned credit-card payoff cannot exceed the current total card balance.';
+      return '';
+    }
+    function syncMix(){
+      const reported=rows.filter(r=>r.reported==='yes');
+      for(const [id,kind] of [['mixLoans','installment'],['mixMortgage','mortgage']]){
+        const has=reported.some(r=>labelFor(r.type)[2]===kind);
+        const box=byId(id);
+        if(has && !box.checked){box.checked=true;automaticallyChecked[id]=true}
+        else if(!has && automaticallyChecked[id]){box.checked=false;automaticallyChecked[id]=false}
+      }
+    }
+    function showSummary(){
+      const valid=rows.filter(r=>r.reported==='yes'&&Number.isFinite(r.original)&&r.original>0&&Number.isFinite(r.balance)&&r.balance>=0);
+      const installment=valid.filter(r=>['installment','mortgage'].includes(labelFor(r.type)[2]));
+      const helocs=valid.filter(r=>labelFor(r.type)[2]==='revolving');
+      const owed=installment.reduce((v,r)=>v+r.balance,0), financed=installment.reduce((v,r)=>v+r.original,0);
+      const helocOwed=helocs.reduce((v,r)=>v+r.balance,0), helocLimit=helocs.reduce((v,r)=>v+r.original,0);
+      const notes=[];
+      if(installment.length)notes.push(installment.length+' reported installment / mortgage account(s): '+fmt(owed)+' outstanding from '+fmt(financed)+' originally borrowed ('+(100*owed/financed).toFixed(1)+'% remaining).');
+      if(helocs.length)notes.push(helocs.length+' reported HELOC(s): '+fmt(helocOwed)+' drawn of '+fmt(helocLimit)+' in line limits.');
+      if(rows.some(r=>r.type==='bnpl'))notes.push('BNPL reporting varies. It is tracked here but not automatically counted toward credit mix.');
+      if(!notes.length)notes.push('No reported installment or HELOC balances entered.');
+      byId('profileLoanSummary').textContent=notes.join(' ');
+      const payoffValue=byId('cardPayoffPlan').value;
+      if(payoffValue.trim()!==''&&Number.isFinite(Number(payoffValue))&&Number(byId('cardLimit').value)>0){
+        const balance=Number(byId('cardBalance').value);
+        const after=Math.max(0,balance-Number(payoffValue));
+        notes.push('Planned card payoff: '+fmt(Number(payoffValue))+'; potential reported card utilization: '+(100*balance/Number(byId('cardLimit').value)).toFixed(1)+'% → '+(100*after/Number(byId('cardLimit').value)).toFixed(1)+'%. This is not an estimated FICO point change.');
+      }
+      const box=byId('loanResultSummary');
+      box.textContent=notes.join(' ');
+      box.classList.toggle('hidden',!rows.length&&payoffValue.trim()==='');
+    }
+    byId('addProfileLoan').addEventListener('click',()=>{
+      if(rows.length>=20){byId('profileLoanSummary').textContent='You can add up to 20 loan accounts.';return}
+      rows.push({type:'auto',original:10000,balance:5000,reported:'yes'});
+      render();syncMix();showSummary();
+    });
+    const list=byId('profileLoanList');
+    function rowUpdate(e){
+      const input=e.target;
+      const entry=input.closest('.loan-entry');
+      if(!entry)return;
+      const r=rows[Number(entry.dataset.row)],field=input.dataset.field;
+      if(!r||!field)return;
+      r[field]=input.type==='number'?(input.value===''?NaN:Number(input.value)):input.value;
+      syncMix();showSummary();
+    }
+    list.addEventListener('input',rowUpdate);
+    list.addEventListener('change',rowUpdate);
+    list.addEventListener('click',e=>{
+      const remove=e.target.closest('[data-remove-loan]');
+      if(!remove)return;
+      const item=remove.closest('.loan-entry');
+      rows.splice(Number(item.dataset.row),1);
+      render();syncMix();showSummary();
+    });
+    byId('cardPayoffPlan').addEventListener('input',showSummary);
+    byId('cardBalance').addEventListener('input',showSummary);
+    byId('cardLimit').addEventListener('input',showSummary);
+    // Capture protects the original submit handler from accepting an inconsistent optional payoff.
+    byId('calculatorForm').addEventListener('submit',event=>{
+      const error=validRows();
+      if(error){
+        event.preventDefault();event.stopImmediatePropagation();
+        byId('errorMessage').textContent=error;byId('errorMessage').classList.remove('hidden');
+        byId('errorMessage').scrollIntoView({behavior:'smooth',block:'nearest'});
+        return;
+      }
+      showSummary();
+    },true);
+    byId('resetBtn').addEventListener('click',()=>{
+      rows.splice(0);render();automaticallyChecked={mixLoans:false,mixMortgage:false};showSummary();byId('loanResultSummary').classList.add('hidden');
+    });
+    showSummary();
+  })();
+</script>
 </body>
 </html>
