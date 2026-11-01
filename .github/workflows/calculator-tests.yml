@@ -1,4 +1,4 @@
-name: Calculator smoke tests
+name: Calculator browser tests
 on:
   push:
     branches: [main]
@@ -15,5 +15,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run browser-logic smoke tests
+      - name: Verify scripts and page structure
         run: node --test tests/smoke.test.cjs
+      - name: Install Chromium for interaction tests
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test calculator, adding credit cards, and collection actions
+        run: node tests/browser.test.cjs
