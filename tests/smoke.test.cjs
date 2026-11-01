@@ -5,9 +5,9 @@ const vm = require('node:vm');
 
 function inspect(filename) {
   const html = fs.readFileSync(filename, 'utf8');
-  const match = html.match(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/i);
-  assert.ok(match, filename + ': inline script exists');
-  new vm.Script(match[1], {filename:filename + ':inline-script'});
+  const matches = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/ig)];
+  assert.ok(matches.length>0, filename + ': inline script exists');
+  matches.forEach((m,i)=>new vm.Script(m[1], {filename:filename + ':inline-script-'+i}));
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(ids.length, new Set(ids).size, filename + ': IDs must be unique');
   assert.equal((html.match(/<\/html>/g)||[]).length, 1, filename + ': one closing html element');
@@ -20,14 +20,18 @@ test('Restored Version 1 calculator parses with original calculation logic', () 
   assert.match(html,/function calculate\(d\)/);
   assert.match(html,/id="exampleBtn"/);
   assert.match(html,/href="scenarios.html"/);
+  assert.match(html,/id="addProfileLoan"/);
+  assert.match(html,/id="profileLoanList"/);
+  assert.match(html,/id="cardPayoffPlan"/);
   assert.doesNotMatch(html,/initDecisionLab/);
 });
 
 test('Separate scenario page parses and has operational controls', () => {
   const html = inspect('scenarios.html');
-  for(const id of ['addCard','addCollection','cardList','collectionList','scoreBefore','scoreAfter','compare','reset','error']) {
+  for(const id of ['addCard','addLoan','addCollection','cardList','loanList','collectionList','loanBalances','installmentRatio','helocBalances','loanPayments','scoreBefore','scoreAfter','compare','reset','error']) {
     assert.ok(html.includes('id="'+id+'"'), 'missing '+id);
   }
   assert.match(html,/function snapshot\(after\)/);
+  assert.match(html,/function loanSummary\(after\)/);
   assert.match(html,/function bindRows\(elementId, array\)/);
 });
