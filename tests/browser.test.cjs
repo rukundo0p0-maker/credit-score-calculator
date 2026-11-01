@@ -105,7 +105,52 @@ const {chromium} = require('playwright');
     await page.goto(pathToFileURL(path.join(root,'index.html')).toString());
     const homeWidth = await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,view:innerWidth}));
     assert.ok(homeWidth.scroll<=homeWidth.view+2,'Original page has no mobile horizontal overflow: '+JSON.stringify(homeWidth));
-    console.log('PASS mobile layout and card addition; all browser tests passed');
+
+    // GA4 consent must be opt-in, shared between pages, and reversible.
+    const consentPage = await browser.newPage({viewport:{width:1200,height:760}});
+    const analyticsRequests = [];
+    await consentPage.route('https://www.googletagmanager.com/**', async route=>{
+      analyticsRequests.push(route.request().url());
+      await route.fulfill({status:200,contentType:'application/javascript',body:'/* stubbed analytics tag in test */'});
+    });
+    await consentPage.goto(pathToFileURL(path.join(root,'index.html')).toString());
+    await consentPage.locator('#csh-analytics-banner').waitFor();
+    assert.equal(analyticsRequests.length,0,'Google Analytics is not requested before consent');
+    assert.equal(await consentPage.locator('#csh-analytics-banner button').count(),2);
+    await consentPage.locator('#csh-analytics-banner .csh-accept').click();
+    await consentPage.waitForFunction(()=>!!document.querySelector('script[data-credit-score-hub-analytics]'));
+    assert.equal(analyticsRequests.length,1,'Analytics loads after explicit opt-in');
+    const analyticsState = await consentPage.evaluate(()=>({
+      consent:localStorage.getItem('credit-score-hub-analytics-consent-v1'),
+      commands:(window.dataLayer||[]).map(c=>Array.from(c))
+    }));
+    assert.equal(analyticsState.consent,'granted');
+    assert.ok(analyticsState.commands.some(c=>c[0]==='config'&&c[1]==='G-3SHJEG2YQ7'));
+    assert.ok(!JSON.stringify(analyticsState.commands).includes('1500'),'No personal balance values included in GA commands');
+    console.log('PASS analytics blocked until consent, then initializes correct GA4 measurement ID');
+
+    await consentPage.goto(pathToFileURL(path.join(root,'scenarios.html')).toString());
+    assert.equal(analyticsRequests.length,2,'Accepted preference loads analytics on scenarios page');
+    assert.equal(await consentPage.locator('#csh-analytics-banner').count(),0,'Consent is remembered on next page');
+    await consentPage.locator('#csh-privacy-settings').click();
+    await consentPage.locator('#csh-analytics-banner .csh-decline').click();
+    await consentPage.waitForFunction(()=>localStorage.getItem('credit-score-hub-analytics-consent-v1')==='denied');
+    await consentPage.waitForLoadState('load');
+    await consentPage.reload();
+    assert.equal(analyticsRequests.length,2,'Declined preference stops new analytics requests');
+    assert.equal(await consentPage.locator('#csh-analytics-banner').count(),0);
+    console.log('PASS analytics refusal and preference withdrawal prevent tracking');
+
+    await consentPage.goto(pathToFileURL(path.join(root,'privacy.html')).toString());
+    assert.equal(await consentPage.locator('#csh-open-privacy-preferences').count(),1,'Privacy policy is available');
+    await consentPage.locator('#csh-open-privacy-preferences').click();
+    await consentPage.locator('#csh-analytics-banner .csh-accept').click();
+    assert.equal(analyticsRequests.length,3,'Analytics may be enabled again from privacy page');
+    assert.equal(await consentPage.locator('#csh-privacy-settings').count(),1);
+    console.log('PASS privacy page allows changing the analytics preference');
+    await consentPage.close();
+
+    console.log('PASS all browser tests passed');
   } finally {
     await browser.close();
   }
