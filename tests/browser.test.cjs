@@ -96,7 +96,16 @@ const {chromium} = require('playwright');
     await page.locator('#reset').click();
     assert.equal(await page.locator('#error').isVisible(),false);
     assert.deepEqual(errors,[],'No uncaught JavaScript errors');
-    console.log('PASS invalid-payment validation and reset; all browser tests passed');
+    console.log('PASS invalid-payment validation and reset');
+    await page.setViewportSize({width:390,height:844});
+    const scenarioWidth = await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,view:innerWidth}));
+    assert.ok(scenarioWidth.scroll<=scenarioWidth.view+2,'Scenario page has no mobile horizontal overflow: '+JSON.stringify(scenarioWidth));
+    await page.locator('#addCard').click();
+    assert.equal(await page.locator('#cardList .item').count(),3,'Add credit card works at mobile width');
+    await page.goto(pathToFileURL(path.join(root,'index.html')).toString());
+    const homeWidth = await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,view:innerWidth}));
+    assert.ok(homeWidth.scroll<=homeWidth.view+2,'Original page has no mobile horizontal overflow: '+JSON.stringify(homeWidth));
+    console.log('PASS mobile layout and card addition; all browser tests passed');
   } finally {
     await browser.close();
   }
