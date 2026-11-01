@@ -7,7 +7,7 @@ function inspect(filename) {
   const html = fs.readFileSync(filename, 'utf8');
   const matches = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/ig)];
   assert.ok(matches.length>0, filename + ': inline script exists');
-  matches.forEach((m,i)=>new vm.Script(m[1], {filename:filename + ':inline-script-'+i}));
+  matches.filter(m=>!/<script[^>]*type=["']application\/ld\+json["']/i.test(m[0].slice(0,m[0].indexOf('>')+1))).forEach((m,i)=>new vm.Script(m[1], {filename:filename + ':inline-script-'+i}));
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(ids.length, new Set(ids).size, filename + ': IDs must be unique');
   assert.equal((html.match(/<\/html>/g)||[]).length, 1, filename + ': one closing html element');
@@ -23,6 +23,12 @@ test('Restored Version 1 calculator parses with original calculation logic', () 
   assert.match(html,/id="addProfileLoan"/);
   assert.match(html,/id="profileLoanList"/);
   assert.match(html,/id="cardPayoffPlan"/);
+  assert.match(html,/<meta property="og:site_name" content="Credit Score Hub"/);
+  const ld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  assert.ok(ld, 'Site name JSON-LD present');
+  const data = JSON.parse(ld[1]);
+  assert.equal(data.name, 'Credit Score Hub');
+  assert.equal(data.url, 'https://yourcreditscorecalculator.com/');
   assert.doesNotMatch(html,/initDecisionLab/);
 });
 
@@ -33,5 +39,6 @@ test('Separate scenario page parses and has operational controls', () => {
   }
   assert.match(html,/function snapshot\(after\)/);
   assert.match(html,/function loanSummary\(after\)/);
+  assert.match(html,/<meta property="og:site_name" content="Credit Score Hub"/);
   assert.match(html,/function bindRows\(elementId, array\)/);
 });
