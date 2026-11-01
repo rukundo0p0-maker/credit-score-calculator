@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4">
+  <meta name="description" content="Explore credit-card payment and collection payoff scenarios with a transparent, educational credit score illustration. No signup, no credit check.">
+  <title>What-if Credit Simulator | Your Credit Score Calculator</title>
+  <style>
+    :root{color-scheme:light;--ink:#172e34;--muted:#647a7f;--green:#087568;--line:#dae6e1;--paper:#f6f7f4;--soft:#edf6f1}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select{font:inherit}button{cursor:pointer}a{color:var(--green)}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #8ed3ba;outline-offset:2px}
+    .shell{width:min(1160px,calc(100% - 40px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:19px 0}.brand{color:var(--ink);font-weight:850;text-decoration:none;letter-spacing:-.035em;display:flex;align-items:center;gap:10px}.brand-icon{background:var(--green);color:#fff;padding:7px 12px;border-radius:11px}.navlinks{display:flex;gap:18px;align-items:center}.navlinks a{color:#45676a;text-decoration:none;font-weight:700;font-size:13px}
+    .hero{padding:47px 0 34px}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:850;color:#148071;margin:0 0 12px}h1{font-size:clamp(30px,5vw,53px);letter-spacing:-.06em;line-height:1.13;max-width:800px;margin:0 0 16px}h1 em{font-style:normal;color:var(--green)}.lead{color:#587078;max-width:760px;font-size:16px;line-height:1.75;margin:0}.notice{border:1px solid #c9ded3;background:#eaf4ef;border-radius:12px;padding:13px 17px;font-size:12px;color:#446960;margin:22px 0}
+    .layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:23px;align-items:start;padding-bottom:65px}.stack{display:grid;gap:19px}
+    .card{background:white;border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 10px 30px rgba(15,59,54,.035)}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:10px}.topline h2{margin:0;font-size:19px;letter-spacing:-.035em}.help{margin:8px 0 14px;color:var(--muted);font-size:12px;line-height:1.75}
+    .small-btn{border:1px solid #b7d8ca;background:#e8f6ee;color:#145f51;border-radius:9px;padding:8px 11px;font-size:12px;font-weight:800;white-space:nowrap}
+    .item{background:#fafcfb;border:1px solid #dce9e1;border-radius:13px;padding:15px;margin:12px 0}.item-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.item-head .title{font-size:13px;font-weight:850}.remove{border:0;background:transparent;color:#9b4845;text-decoration:underline;font-size:12px}
+    .fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.fields.two{grid-template-columns:repeat(2,minmax(0,1fr))}.field{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:750;color:#61777c}.field input,.field select{width:100%;min-width:0;padding:10px;border:1px solid #cedfd6;border-radius:9px;color:#264747;background:white;font-size:13px;min-height:42px}.field input.payment{background:#e9f7ef;border-color:#b6dac6}
+    .mini{font-size:11px;color:#708388;margin:12px 0 0;line-height:1.7}.controls{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;background:var(--green);color:#fff;border-radius:11px;padding:12px 19px;font-size:13px;font-weight:800}.btn.secondary{background:#e5f3ea;color:#176d5a}
+    .error{margin-top:12px;background:#fff2ed;border:1px solid #f0c1b7;color:#8f3c32;border-radius:10px;padding:12px;font-size:12px}.hidden{display:none!important}
+    .summary{background:linear-gradient(150deg,#103b3c,#09675b);border-radius:18px;padding:25px;color:white;position:sticky;top:20px;box-shadow:0 18px 45px rgba(4,83,67,.12)}.summary h2{font-size:20px;margin:0 0 4px;letter-spacing:-.04em}.summary .desc{font-size:12px;color:#d0e5e0;margin:0 0 18px}
+    .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.score{border-radius:11px;background:#ffffff20;padding:13px}.score.after{background:#e0f9e9;color:#165b4c}.score small{font-size:11px;display:block}.score strong{font-size:42px;letter-spacing:-.055em;line-height:1.2;display:block;font-variant-numeric:tabular-nums}.score span{display:block;font-size:10px}.delta{margin:14px 0;padding:13px;border-radius:9px;background:#ffffff1a;font-size:12px}.delta strong{display:block;font-size:16px;color:#d3f8e4}
+    .facts{margin:0;padding:0;list-style:none}.facts li{border-top:1px solid #ffffff30;display:flex;justify-content:space-between;gap:10px;padding:12px 0;font-size:12px}.facts span{color:#cde4df}.facts b{text-align:right}.explain{background:white;border-radius:12px;color:#42665d;font-size:12px;padding:15px;line-height:1.7;margin-top:15px}.explain b{color:#16574c;display:block;margin-bottom:5px}.disclaimer{color:#cbe2dd;font-size:11px;line-height:1.7;margin:15px 0 0}.card-foot{font-size:12px;color:#637b78;line-height:1.8}.card-foot summary{cursor:pointer;font-weight:800;color:#275b53}
+    footer{border-top:1px solid var(--line);padding:24px 0 36px;font-size:12px;color:#728786}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.summary{position:static}.navlinks{gap:9px}}
+    @media(max-width:590px){.shell{width:min(100% - 26px,1160px)}.nav{align-items:start}.brand{font-size:12px}.navlinks{flex-direction:column;align-items:flex-end}.hero{padding:25px 0}.card,.summary{padding:17px}.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.field.payment-field{grid-column:1/-1}.fields.two{grid-template-columns:1fr}.score strong{font-size:34px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-icon">C</span>Credit Score Calculator</a>
+      <div class="navlinks"><a href="index.html#calculator">Original calculator</a><a href="index.html#learn">Learn about scoring</a></div>
+    </nav>
+    <header class="hero">
+      <p class="eyebrow">What-if scenario analysis</p>
+      <h1>What could happen if I <em>pay this card or collection?</em></h1>
+      <p class="lead">Enter each credit card, try different payment amounts, and compare leaving a collection unpaid versus paying or settling it. The results show how your reported balances and an <strong>independent educational score illustration</strong> would change.</p>
+      <p class="notice"><strong>Important:</strong> These are not actual or validated FICO scores, or predictions of how many points your score will change. We use a simplified model and example assumptions for other credit factors. No credit report, login, or personal identity information is requested.</p>
+    </header>
+    <main class="layout">
+      <div class="stack">
+        <section class="card" aria-labelledby="cardsTitle">
+          <div class="topline"><h2 id="cardsTitle">1. Credit cards</h2><button type="button" class="small-btn" id="addCard">+ Add credit card</button></div>
+          <p class="help">Enter <strong>reported</strong> balances and limits (not necessarily today's live balances). Adjust the payment for each card to see the scenario.</p>
+          <div id="cardList"></div>
+          <p class="mini">Payments in this example reduce balances, but do not change your credit limits or close accounts. The actual credit report updates when the lender reports.</p>
+        </section>
+        <section class="card" aria-labelledby="collectionsTitle">
+          <div class="topline"><h2 id="collectionsTitle">2. Collection accounts</h2><button type="button" class="small-btn" id="addCollection">+ Add collection</button></div>
+          <p class="help">For each account, choose the reporting type and whether it would be paid or settled to $0. <strong>FICO 10/10T</strong> generally disregards paid/zero-balance <strong>third-party collections</strong>, but a real score outcome is not guaranteed.</p>
+          <div id="collectionList"></div>
+          <p class="mini">A first-party collection or separate late-payment history can remain negative even after payment. Check the reporting status on your actual credit reports.</p>
+        </section>
+        <section class="card">
+          <div class="topline"><h2>3. Compare scenarios</h2></div>
+          <p class="help">The illustrative score holds other factors constant using an example profile: eight-year oldest account, four-year average age, one recent inquiry, no late payments, and an installment loan. Use the original calculator separately for a full personal five-factor illustration.</p>
+          <div class="controls"><button class="btn" id="compare" type="button">Calculate scenario →</button><button class="btn secondary" id="reset" type="button">Reset example</button></div>
+          <div id="error" class="error hidden" role="alert"></div>
+          <p class="mini">The scenario recalculates as you edit. All calculations happen locally in your browser.</p>
+        </section>
+        <section class="card card-foot">
+          <strong>Methodology notes</strong>
+          <p>Credit utilization = reported revolving balance ÷ credit limit. The illustrative score uses the five public FICO category weights with independently selected assumptions; its precision is not established. Individual-account utilization and cards reporting balances are shown as educational indicators, but not converted into invented exact FICO point changes.</p>
+          <p>Sources: <a href="https://www.myfico.com/credit-education/whats-in-your-credit-score" target="_blank" rel="noopener noreferrer">myFICO scoring factors</a> · <a href="https://www.myfico.com/credit-education/faq/negative-reasons/collections-affect-credit" target="_blank" rel="noopener noreferrer">myFICO collections</a> · <a href="https://www.myfico.com/credit-education/credit-scores/fico-score-versions" target="_blank" rel="noopener noreferrer">FICO versions</a>.</p>
+          <details><summary>Footnote: older FICO models</summary><p>FICO versions differ. Older versions may count some paid collections that newer versions disregard. Some lenders continue to use older FICO versions; this site is not a substitute for a score from a credit bureau or lender.</p></details>
+        </section>
+      </div>
+      <aside class="summary" aria-labelledby="resultTitle">
+        <h2 id="resultTitle">Before vs. after</h2>
+        <p class="desc">A directional teaching model—not an actual FICO Score 10/10T calculation.</p>
+        <div class="score-grid">
+          <div class="score"><small>Before</small><strong id="scoreBefore">—</strong><span>Illustrative / 850</span></div>
+          <div class="score after"><small>After</small><strong id="scoreAfter">—</strong><span>Illustrative / 850</span></div>
+        </div>
+        <div class="delta"><strong id="scoreDelta">Enter your scenario</strong><span id="deltaDescription">Calculate to compare example model results.</span></div>
+        <ul class="facts">
+          <li><span>Total card balance</span><b id="cardBalances">—</b></li>
+          <li><span>Overall utilization</span><b id="utilization">—</b></li>
+          <li><span>Cards with balances</span><b id="cardsWithBalances">—</b></li>
+          <li><span>Collections affecting the illustration</span><b id="collectionCounts">—</b></li>
+          <li><span>Planned card payments</span><b id="totalPayments">—</b></li>
+        </ul>
+        <div class="explain"><b>What these results mean</b><span id="takeaway">Try different amounts to explore the effect of paying down debt.</span></div>
+        <p class="disclaimer">No credit score can be reconstructed from FICO's public category percentages. An actual score may stay unchanged or move differently. FICO 10T also evaluates historical credit trends unavailable to this calculator.</p>
+      </aside>
+    </main>
+  </div>
+  <footer><div class="shell">Independent financial education project. Not affiliated with or endorsed by FICO. <a href="index.html">Return to the original calculator</a>.</div></footer>
+  <script>
+    'use strict';
+    (function () {
+      const $ = id => document.getElementById(id);
+      const cards = [];
+      const collections = [];
+      const fmtMoney = n => new Intl.NumberFormat('en-US', {style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
+      const fmtPct = n => n === null ? 'N/A' : (100*n).toFixed(1)+'%';
+      const validMoney = n => Number.isFinite(n) && n >= 0 && n <= 100000000;
+      const clamp = (v, lo=0, hi=1) => Math.max(lo, Math.min(hi,v));
+      function interpolate(v, pts) {
+        if(v <= pts[0][0]) return pts[0][1];
+        for(let i=1;i<pts.length;i++){
+          if(v <= pts[i][0]){
+            const a=pts[i-1],b=pts[i];
+            return a[1]+(v-a[0])*(b[1]-a[1])/(b[0]-a[0]);
+          }
+        }
+        return pts[pts.length-1][1];
+      }
+      function field(label, type, key, val, opts) {
+        const text = '<label class="field '+(key==='pay'?'payment-field':'')+'">'+label;
+        if(type==='select'){
+          return text+'<select data-field="'+key+'">'+opts.map(o=>'<option value="'+o[0]+'"'+(o[0]===val?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></label>';
+        }
+        return text+'<input'+(key==='pay'?' class="payment"':'')+' type="number" inputmode="decimal" min="'+(key==='limit'?'0.01':'0')+'" max="100000000" step="0.01" data-field="'+key+'" value="'+val+'"></label>';
+      }
+      function drawCards() {
+        $('cardList').innerHTML=cards.map((card,i)=>
+          '<div class="item" data-index="'+i+'"><div class="item-head"><span class="title">Credit card '+(i+1)+'</span><button type="button" class="remove" data-remove="card">Remove</button></div><div class="fields">'
+          +field('Reported balance ($)','number','balance',card.balance)
+          +field('Credit limit ($)','number','limit',card.limit)
+          +field('Payment to simulate ($)','number','pay',card.pay)
+          +'</div></div>'
+        ).join('')||'<p class="help">No cards added. Select “Add credit card” to enter one.</p>';
+      }
+      function drawCollections() {
+        $('collectionList').innerHTML=collections.map((col,i)=>
+          '<div class="item" data-index="'+i+'"><div class="item-head"><span class="title">Collection '+(i+1)+'</span><button type="button" class="remove" data-remove="collection">Remove</button></div><div class="fields two">'
+          +field('Type','select','kind',col.kind,[['third','Third-party, nonmedical'],['medical','Third-party, medical'],['first','Original creditor / first-party']])
+          +field('Original amount ($)','number','original',col.original)
+          +field('Currently reported','select','status',col.status,[['unpaid','Unpaid'],['paid','Paid / settled ($0)']])
+          +field('What if you…','select','action',col.action,[['keep','Keep as-is'],['pay','Pay in full, report $0'],['settle','Settle, report $0']])
+          +'</div></div>'
+        ).join('')||'<p class="help">No collection accounts added. Select “Add collection” to test one.</p>';
+      }
+      function setError(message) {
+        $('error').textContent=message;
+        $('error').classList.toggle('hidden',!message);
+      }
+      function check() {
+        for (const c of cards) {
+          if(!validMoney(c.balance)||!validMoney(c.limit)||c.limit<=0||!validMoney(c.pay)||c.pay>c.balance) {
+            return 'Enter a positive limit and valid balance for each card. A simulated payment cannot exceed its balance.';
+          }
+        }
+        for (const c of collections) {
+          if(!validMoney(c.original)) return 'Enter a valid nonnegative original amount for each collection.';
+        }
+        return '';
+      }
+      function consideredCount(after) {
+        return collections.filter(c=>{
+          if(c.kind==='first')return true;
+          if(c.original<100)return false;
+          if(c.kind==='medical'&&c.original<500)return false;
+          return c.status!=='paid' && !(after&&c.action!=='keep');
+        }).length;
+      }
+      function snapshot(after) {
+        const limits=cards.reduce((total,c)=>total+c.limit,0);
+        const balances=cards.map(c=>after?Math.max(0,c.balance-c.pay):c.balance);
+        const balance=balances.reduce((total,v)=>total+v,0);
+        const utilization=limits>0?balance/limits:null;
+        const active=balances.filter(b=>b>0).length;
+        const considered=Math.min(3,consideredCount(after));
+        // Use the SAME broad five-category illustrative structure as the original version 1.
+        // These are independently chosen educational assumptions, not a FICO algorithm.
+        const payment=clamp(1-.32*considered,.04,1);
+        const amounts=utilization===null?.72:interpolate(utilization,[[0,.97],[.01,1],[.09,.96],[.30,.80],[.50,.56],[.75,.32],[1,.10],[1.5,.02]]);
+        const oldest=interpolate(8,[[0,0],[.5,.43],[1,.52],[3,.67],[5,.8],[10,.92],[20,.99],[30,1]]);
+        const avg=interpolate(4,[[0,.17],[.5,.38],[1,.46],[3,.65],[5,.78],[8,.9],[12,1]]);
+        const history=.55*oldest+.45*avg;
+        const newCredit=.94;
+        const mix=cards.length?1:.82;
+        const weighted=.35*payment+.30*amounts+.15*history+.10*newCredit+.10*mix;
+        const score=clamp(Math.round((300+550*weighted)/5)*5,300,850);
+        return {score,balance,utilization,active,considered:consideredCount(after),limits};
+      }
+      function compare() {
+        const error=check();
+        setError(error);
+        if(error)return;
+        const before=snapshot(false),after=snapshot(true);
+        const difference=after.score-before.score;
+        $('scoreBefore').textContent=before.score;
+        $('scoreAfter').textContent=after.score;
+        $('scoreDelta').textContent=(difference>=0?'+':'')+difference+' illustrative model points';
+        $('deltaDescription').textContent='Not a forecast of actual FICO Score changes.';
+        $('cardBalances').textContent=fmtMoney(before.balance)+' → '+fmtMoney(after.balance);
+        $('utilization').textContent=fmtPct(before.utilization)+' → '+fmtPct(after.utilization);
+        $('cardsWithBalances').textContent=before.active+' → '+after.active;
+        $('collectionCounts').textContent=before.considered+' → '+after.considered;
+        const planned=cards.reduce((total,c)=>total+c.pay,0);
+        $('totalPayments').textContent=fmtMoney(planned);
+        const notes=[];
+        if(planned>0)notes.push('Card payments lower the modeled balances and overall revolving utilization. Individual card utilization and the number of cards carrying a balance can also influence real scoring.');
+        if(collections.some(c=>c.status==='unpaid'&&c.kind!=='first'&&c.action!=='keep'))notes.push('Under FICO Score 10/10T, third-party collections reported paid or settled to $0 are disregarded; any separate original-creditor delinquencies can remain.');
+        if(collections.some(c=>c.status==='unpaid'&&c.kind==='first'&&c.action!=='keep'))notes.push('A first-party collection is not automatically excluded just because it was paid.');
+        if(after.active===0&&cards.length)notes.push('All cards reporting zero can score differently from having a small reported balance; this simulator does not assign separate point adjustments for that distinction.');
+        if(!notes.length)notes.push('Change a payment amount or collection action to explore a scenario. All other illustrative scoring factors are held constant.');
+        $('takeaway').textContent=notes.join(' ');
+      }
+      function bindRows(elementId, array) {
+        const node=$(elementId);
+        function handle(event) {
+          const target=event.target;
+          const box=target.closest('.item');
+          if(!box||!box.parentElement||box.parentElement!==node)return;
+          const fieldName=target.dataset.field;
+          if(!fieldName)return;
+          const index=Number(box.dataset.index);
+          if(!array[index])return;
+          array[index][fieldName]=target.type==='number'?(target.value===''?NaN:Number(target.value)):target.value;
+          compare();
+        }
+        node.addEventListener('input',handle);
+        node.addEventListener('change',handle);
+        node.addEventListener('click',event=>{
+          const btn=event.target.closest('[data-remove]');
+          if(!btn)return;
+          const box=btn.closest('.item');
+          const index=Number(box.dataset.index);
+          array.splice(index,1);
+          drawCards();
+          drawCollections();
+          compare();
+        });
+      }
+      $('addCard').addEventListener('click',()=>{
+        if(cards.length>=20){setError('Maximum 20 cards in the simulator.');return;}
+        cards.push({balance:0,limit:1000,pay:0});
+        drawCards();compare();
+      });
+      $('addCollection').addEventListener('click',()=>{
+        if(collections.length>=20){setError('Maximum 20 collections in the simulator.');return;}
+        collections.push({kind:'third',original:500,status:'unpaid',action:'keep'});
+        drawCollections();compare();
+      });
+      $('compare').addEventListener('click',compare);
+      $('reset').addEventListener('click',()=>{
+        cards.splice(0,cards.length,{balance:3000,limit:5000,pay:2000},{balance:1200,limit:3000,pay:0});
+        collections.splice(0,collections.length,{kind:'third',original:650,status:'unpaid',action:'pay'});
+        drawCards();drawCollections();compare();
+      });
+      bindRows('cardList',cards);
+      bindRows('collectionList',collections);
+      $('reset').click();
+    })();
+  </script>
+</body>
+</html>
