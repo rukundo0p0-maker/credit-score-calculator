@@ -48,14 +48,20 @@
           <div id="cardList"></div>
           <p class="mini">Payments in this example reduce balances, but do not change your credit limits or close accounts. The actual credit report updates when the lender reports.</p>
         </section>
+        <section class="card" aria-labelledby="loansTitle">
+          <div class="topline"><h2 id="loansTitle">2. Loans and credit lines</h2><button type="button" class="small-btn" id="addLoan">+ Add a loan</button></div>
+          <p class="help">Add auto loans, mortgages, student loans, personal loans, credit-builder loans, HELOCs, or other financing. Enter the original borrowed amount for installment loans, or the credit limit for a HELOC. Then test a payoff amount.</p>
+          <div id="loanList"></div>
+          <p class="mini">Installment-loan payoff ratios differ from credit-card utilization. Paying off a loan may help, have no immediate effect, or even lower a FICO score in some circumstances; this simulator tracks the balances but <strong>does not invent a point increase for loan payments</strong>. BNPL reporting can vary.</p>
+        </section>
         <section class="card" aria-labelledby="collectionsTitle">
-          <div class="topline"><h2 id="collectionsTitle">2. Collection accounts</h2><button type="button" class="small-btn" id="addCollection">+ Add collection</button></div>
+          <div class="topline"><h2 id="collectionsTitle">3. Collection accounts</h2><button type="button" class="small-btn" id="addCollection">+ Add collection</button></div>
           <p class="help">For each account, choose the reporting type and whether it would be paid or settled to $0. <strong>FICO 10/10T</strong> generally disregards paid/zero-balance <strong>third-party collections</strong>, but a real score outcome is not guaranteed.</p>
           <div id="collectionList"></div>
           <p class="mini">A first-party collection or separate late-payment history can remain negative even after payment. Check the reporting status on your actual credit reports.</p>
         </section>
         <section class="card">
-          <div class="topline"><h2>3. Compare scenarios</h2></div>
+          <div class="topline"><h2>4. Compare scenarios</h2></div>
           <p class="help">The illustrative score holds other factors constant using an example profile: eight-year oldest account, four-year average age, one recent inquiry, no late payments, and an installment loan. Use the original calculator separately for a full personal five-factor illustration.</p>
           <div class="controls"><button class="btn" id="compare" type="button">Calculate scenario →</button><button class="btn secondary" id="reset" type="button">Reset example</button></div>
           <div id="error" class="error hidden" role="alert"></div>
@@ -63,8 +69,9 @@
         </section>
         <section class="card card-foot">
           <strong>Methodology notes</strong>
+          <p>Credit-card utilization = reported card balance ÷ credit card limit. HELOC balances are displayed separately because reporting and model treatment may vary. Mortgage, auto, student, personal, and other installment borrowing is tracked against the originally borrowed amount. No exact score-point effect is inferred from these payments.</p>
           <p>Credit utilization = reported revolving balance ÷ credit limit. The illustrative score uses the five public FICO category weights with independently selected assumptions; its precision is not established. Individual-account utilization and cards reporting balances are shown as educational indicators, but not converted into invented exact FICO point changes.</p>
-          <p>Sources: <a href="https://www.myfico.com/credit-education/whats-in-your-credit-score" target="_blank" rel="noopener noreferrer">myFICO scoring factors</a> · <a href="https://www.myfico.com/credit-education/faq/negative-reasons/collections-affect-credit" target="_blank" rel="noopener noreferrer">myFICO collections</a> · <a href="https://www.myfico.com/credit-education/credit-scores/fico-score-versions" target="_blank" rel="noopener noreferrer">FICO versions</a>.</p>
+          <p>Sources: <a href="https://www.myfico.com/credit-education/whats-in-your-credit-score" target="_blank" rel="noopener noreferrer">myFICO scoring factors</a> · <a href="https://www.myfico.com/credit-education/faq/negative-reasons/collections-affect-credit" target="_blank" rel="noopener noreferrer">myFICO collections</a> · <a href="https://www.myfico.com/credit-education/credit-scores/fico-score-versions" target="_blank" rel="noopener noreferrer">FICO versions</a> · <a href="https://www.myfico.com/credit-education/faq/scores/paying-off-installment-loan" target="_blank" rel="noopener noreferrer">FICO installment-loan payoffs</a>.</p>
           <details><summary>Footnote: older FICO models</summary><p>FICO versions differ. Older versions may count some paid collections that newer versions disregard. Some lenders continue to use older FICO versions; this site is not a substitute for a score from a credit bureau or lender.</p></details>
         </section>
       </div>
@@ -82,6 +89,10 @@
           <li><span>Cards with balances</span><b id="cardsWithBalances">—</b></li>
           <li><span>Collections affecting the illustration</span><b id="collectionCounts">—</b></li>
           <li><span>Planned card payments</span><b id="totalPayments">—</b></li>
+          <li><span>Other loan balances</span><b id="loanBalances">—</b></li>
+          <li><span>Installment loan balance / original</span><b id="installmentRatio">—</b></li>
+          <li><span>HELOC drawn balance / limits</span><b id="helocBalances">—</b></li>
+          <li><span>Planned other-loan payments</span><b id="loanPayments">—</b></li>
         </ul>
         <div class="explain"><b>What these results mean</b><span id="takeaway">Try different amounts to explore the effect of paying down debt.</span></div>
         <p class="disclaimer">No credit score can be reconstructed from FICO's public category percentages. An actual score may stay unchanged or move differently. FICO 10T also evaluates historical credit trends unavailable to this calculator.</p>
@@ -95,6 +106,15 @@
       const $ = id => document.getElementById(id);
       const cards = [];
       const collections = [];
+      const loans = [];
+      const LOAN_TYPES=[
+        ['auto','Car / auto loan','installment'],['lease','Auto lease','installment'],
+        ['mortgage','Home mortgage','installment'],['student-federal','Federal student loan','installment'],
+        ['student-private','Private student loan','installment'],['personal','Personal loan','installment'],
+        ['home-equity','Home equity installment loan','installment'],['credit-builder','Credit-builder loan','installment'],
+        ['retail','Retail / furniture installment loan','installment'],['other','Other installment loan','installment'],
+        ['heloc','Home equity line of credit (HELOC)','heloc'],['bnpl','Buy now, pay later (BNPL)','uncertain']
+      ];
       const fmtMoney = n => new Intl.NumberFormat('en-US', {style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
       const fmtPct = n => n === null ? 'N/A' : (100*n).toFixed(1)+'%';
       const validMoney = n => Number.isFinite(n) && n >= 0 && n <= 100000000;
@@ -119,11 +139,33 @@
       function drawCards() {
         $('cardList').innerHTML=cards.map((card,i)=>
           '<div class="item" data-index="'+i+'"><div class="item-head"><span class="title">Credit card '+(i+1)+'</span><button type="button" class="remove" data-remove="card">Remove</button></div><div class="fields">'
-          +field('Reported balance ($)','number','balance',card.balance)
           +field('Credit limit ($)','number','limit',card.limit)
-          +field('Payment to simulate ($)','number','pay',card.pay)
+          +field('Current balance ($)','number','balance',card.balance)
+          +field('Payoff amount ($)','number','pay',card.pay)
           +'</div></div>'
         ).join('')||'<p class="help">No cards added. Select “Add credit card” to enter one.</p>';
+      }
+      function drawLoans(){
+        $('loanList').innerHTML=loans.map((loan,i)=>
+          '<div class="item" data-index="'+i+'"><div class="item-head"><span class="title">Loan / credit line '+(i+1)+'</span><button type="button" class="remove" data-remove="loan">Remove</button></div><div class="fields">'
+          +field('Loan type','select','type',loan.type,LOAN_TYPES.map(t=>[t[0],t[1]]))
+          +field('Original amount / credit limit ($)','number','original',loan.original)
+          +field('Current balance ($)','number','balance',loan.balance)
+          +field('Payoff amount ($)','number','pay',loan.pay)
+          +field('Appears on your credit report?','select','reported',loan.reported,[['yes','Yes'],['unsure','Not sure'],['no','No']])
+          +'</div></div>'
+        ).join('')||'<p class="help">No other loans added. Select “Add a loan” to model a car, home, student, or other credit account.</p>';
+      }
+      function loanSummary(after){
+        const tracked=loans.map(l=>({...l,remaining:after?Math.max(0,l.balance-l.pay):l.balance}));
+        const balance=tracked.reduce((sum,l)=>sum+l.remaining,0);
+        const installment=tracked.filter(l=>l.reported==='yes'&&LOAN_TYPES.find(t=>t[0]===l.type)[2]==='installment');
+        const installmentOriginal=installment.reduce((sum,l)=>sum+l.original,0);
+        const installmentBalance=installment.reduce((sum,l)=>sum+l.remaining,0);
+        const lines=tracked.filter(l=>l.reported==='yes'&&l.type==='heloc');
+        const helocBalance=lines.reduce((sum,l)=>sum+l.remaining,0);
+        const helocLimit=lines.reduce((sum,l)=>sum+l.original,0);
+        return {balance,installmentOriginal,installmentBalance,helocBalance,helocLimit};
       }
       function drawCollections() {
         $('collectionList').innerHTML=collections.map((col,i)=>
@@ -143,6 +185,11 @@
         for (const c of cards) {
           if(!validMoney(c.balance)||!validMoney(c.limit)||c.limit<=0||!validMoney(c.pay)||c.pay>c.balance) {
             return 'Enter a positive limit and valid balance for each card. A simulated payment cannot exceed its balance.';
+          }
+        }
+        for(const l of loans){
+          if(!validMoney(l.original)||l.original===0||!validMoney(l.balance)||!validMoney(l.pay)||l.pay>l.balance){
+            return 'For each loan, enter a positive original amount or limit, a valid balance, and a payoff no larger than that balance.';
           }
         }
         for (const c of collections) {
@@ -176,7 +223,7 @@
         const mix=cards.length?1:.82;
         const weighted=.35*payment+.30*amounts+.15*history+.10*newCredit+.10*mix;
         const score=clamp(Math.round((300+550*weighted)/5)*5,300,850);
-        return {score,balance,utilization,active,considered:consideredCount(after),limits};
+        return {score,balance,utilization,active,considered:consideredCount(after),limits,loans:loanSummary(after)};
       }
       function compare() {
         const error=check();
@@ -194,11 +241,24 @@
         $('collectionCounts').textContent=before.considered+' → '+after.considered;
         const planned=cards.reduce((total,c)=>total+c.pay,0);
         $('totalPayments').textContent=fmtMoney(planned);
+        $('loanBalances').textContent=fmtMoney(before.loans.balance)+' → '+fmtMoney(after.loans.balance);
+        const installmentPct=info=>info.installmentOriginal>0?(100*info.installmentBalance/info.installmentOriginal).toFixed(1)+'%':'N/A';
+        $('installmentRatio').textContent=installmentPct(before.loans)+' → '+installmentPct(after.loans);
+        const helocFmt=info=>info.helocLimit>0?fmtMoney(info.helocBalance)+' / '+fmtMoney(info.helocLimit):'N/A';
+        $('helocBalances').textContent=helocFmt(before.loans)+' → '+helocFmt(after.loans);
+        const plannedLoan=loans.reduce((total,l)=>total+l.pay,0);
+        $('loanPayments').textContent=fmtMoney(plannedLoan);
         const notes=[];
         if(planned>0)notes.push('Card payments lower the modeled balances and overall revolving utilization. Individual card utilization and the number of cards carrying a balance can also influence real scoring.');
         if(collections.some(c=>c.status==='unpaid'&&c.kind!=='first'&&c.action!=='keep'))notes.push('Under FICO Score 10/10T, third-party collections reported paid or settled to $0 are disregarded; any separate original-creditor delinquencies can remain.');
         if(collections.some(c=>c.status==='unpaid'&&c.kind==='first'&&c.action!=='keep'))notes.push('A first-party collection is not automatically excluded just because it was paid.');
         if(after.active===0&&cards.length)notes.push('All cards reporting zero can score differently from having a small reported balance; this simulator does not assign separate point adjustments for that distinction.');
+        if(plannedLoan>0){
+          notes.push('Your proposed other-loan payments reduce tracked balances by '+fmtMoney(plannedLoan)+'. Installment balances versus their original loan amounts can affect real scores, but no fixed point adjustment is assigned here.');
+          if(loans.some(l=>l.pay===l.balance&&l.balance>0))notes.push('Paying off your last active installment account can sometimes reduce a real FICO score even when you reduce debt.');
+          if(loans.some(l=>l.type==='heloc'&&l.pay>0))notes.push('HELOCs are revolving accounts, but are displayed separately rather than automatically treated as credit-card utilization.');
+        }
+        if(loans.some(l=>l.type==='bnpl'))notes.push('BNPL loans are tracked for debt planning; their credit-bureau reporting may vary.');
         if(!notes.length)notes.push('Change a payment amount or collection action to explore a scenario. All other illustrative scoring factors are held constant.');
         $('takeaway').textContent=notes.join(' ');
       }
@@ -224,6 +284,7 @@
           const index=Number(box.dataset.index);
           array.splice(index,1);
           drawCards();
+          drawLoans();
           drawCollections();
           compare();
         });
@@ -232,6 +293,11 @@
         if(cards.length>=20){setError('Maximum 20 cards in the simulator.');return;}
         cards.push({balance:0,limit:1000,pay:0});
         drawCards();compare();
+      });
+      $('addLoan').addEventListener('click',()=>{
+        if(loans.length>=20){setError('Maximum 20 loans in the simulator.');return;}
+        loans.push({type:'auto',original:10000,balance:5000,pay:0,reported:'yes'});
+        drawLoans();compare();
       });
       $('addCollection').addEventListener('click',()=>{
         if(collections.length>=20){setError('Maximum 20 collections in the simulator.');return;}
@@ -242,9 +308,11 @@
       $('reset').addEventListener('click',()=>{
         cards.splice(0,cards.length,{balance:3000,limit:5000,pay:2000},{balance:1200,limit:3000,pay:0});
         collections.splice(0,collections.length,{kind:'third',original:650,status:'unpaid',action:'pay'});
-        drawCards();drawCollections();compare();
+        loans.splice(0,loans.length);
+        drawCards();drawLoans();drawCollections();compare();
       });
       bindRows('cardList',cards);
+      bindRows('loanList',loans);
       bindRows('collectionList',collections);
       $('reset').click();
     })();
